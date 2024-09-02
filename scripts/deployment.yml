@@ -1,1 +1,40 @@
-# Write Kubernetes Deployment Script
+#
+# To deploy:
+#
+# kubectl apply -f scripts/deploy.yaml
+#
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sit-722-part2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sit-722-part2
+  template:
+    metadata:
+      labels:
+        app: sit-722-part2
+    spec:
+      containers: 
+      - name: sit-722-part2
+        image: book_catalog:1
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: postgresql://admin:xTrTARrfYK4MzDq9aBszOfaDDFWwdt4x@dpg-cr6l7a56l47c7395h7fg-a.oregon-postgres.render.com/sit722_2yyq
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sit-722-part2
+spec:
+  selector:
+    app: sit-722-part2
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
